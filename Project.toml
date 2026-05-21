@@ -1,0 +1,4 @@
+name = "MRIPulses"
+uuid = "0dd308a2-b030-4bfa-a19c-6e4aba836528"
+version = "0.0.1"
+authors = ["Jeff Fessler and contributors <JeffFessler@users.noreply.github.com>"]
