@@ -27,6 +27,8 @@ WIP!
 - https://github.com/MagneticResonanceImaging/BlochSimulators.jl
 - https://github.com/MagneticResonanceImaging/BlochSim.jl
 - https://github.com/mikgroup/sigpy/blob/main/sigpy/mri/rf/slr.py
+- https://mrilab.sourceforge.net
+- https://github.com/ismrm/mrhub
 
 
 ## Compatibility
