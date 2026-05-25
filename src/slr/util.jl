@@ -1,10 +1,16 @@
-# util.jl
+# slr/util.jl
 
 
 """
     dinf(d1 = 0.01, d2 = 0.01)
 
 Calculate `D_∞` for a linear phase filter.
+From eqn. (20) in the Pauly reference below,
+`D_∞ = T ⋅ B ⋅ W`
+where
+- `T = (N-1) Δt` is the pulse duration
+- `B = (Fₚ + Fₛ) / Δt` is the filter half-amplitude width
+- `W = (Fₚ - Fₛ) / (Fₚ + Fₛ)` is the fractional transition width.
 
 # Arguments
 - `d1::Real`: passband ripple level in M0⁻¹.
