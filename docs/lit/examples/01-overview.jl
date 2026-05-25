@@ -2,10 +2,7 @@
 # [MRIPulses overview](@id 01-overview)
 
 This page illustrates the Julia package
-[`Template`](https://github.com/MagneticResonanceImaging/MRIPulses.jl).
-
-This page was generated from a single Julia file:
-[01-overview.jl](@__REPO_ROOT_URL__/01-overview.jl).
+[`MRIPulses`](https://github.com/MagneticResonanceImaging/MRIPulses.jl).
 =#
 
 #srcURL
@@ -29,6 +26,7 @@ isinteractive() ? jim(:prompt, true) : prompt(:draw);
 # ## Overview
 
 #=
+See the other demo(s).
 =#
 
 include("../../../inc/reproduce.jl")
