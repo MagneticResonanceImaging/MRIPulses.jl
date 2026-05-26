@@ -172,7 +172,6 @@ function plot_profile(spins, plabel)
     plot!(zpos, mpha, label = "∠Mxy")
 
     return plot(pmag, ppha; layout = (2,1),
-#     plot_title = "Slice profile for $nlobe-lobe sinc, α = $(α_deg)°",
       plot_title = "Slice profile: $plabel, α=$(α_deg)° T2=$T2_ms ms",
     )
 end;
@@ -193,6 +192,9 @@ pp2 = plot_profile(spins2, label2)
 prompt()
 
 
+#=
+## Compare slice profiles
+=#
 function plot_profile2(signals, labels)
     xaxis = ("z [cm]", (-1,1), [-1, -slice_width/2, 0, slice_width/2, 1])
     ytick = ([0, sin(α_rad), 1], ["0", "sin($(α_deg)°)", 1])
