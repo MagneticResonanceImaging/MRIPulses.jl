@@ -14,8 +14,12 @@ https://github.com/MagneticResonanceImaging/MRIPulses.jl
 [![deps](https://juliahub.com/docs/MRIPulses/deps.svg)](https://juliahub.com/ui/Packages/MRIPulses)
 [![version](https://juliahub.com/docs/MRIPulses/version.svg)](https://juliahub.com/ui/Packages/MRIPulses)
 [![pkgeval](https://juliahub.com/docs/MRIPulses/pkgeval.svg)](https://juliahub.com/ui/Packages/MRIPulses)
+<img src="docs/src/assets/logo.png" alt="logo" width="150">
 
-WIP!
+Currently supports the following RF pulse design methods
+- Shinnar-Le Roux (SLR)
+
+See the documentation for example demos.
 
 
 ## Related packages
