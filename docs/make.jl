@@ -1,6 +1,6 @@
 execute = isempty(ARGS) || ARGS[1] == "run"
 
-org, reps = :JuliaImageRecon, :MRIPulses
+org, reps = :MagneticResonanceImaging, :MRIPulses
 eval(:(using $reps))
 import Documenter
 import Literate
