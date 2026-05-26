@@ -66,7 +66,8 @@ nlobe = 3
 slice_width = 0.5 # cm
 rf0, rephasing0 = rf_slice(tRF_ms ; nlobe, α_rad, Δt_ms, slice_width)
 pulse0 = real(@. rf0.α * cis(rf0.θ)) # / b1_gauss(1, rf0.Δt)
-label0 = "Sinc nlobe=$nlobe"
+label0 = "Sinc nlobe=$nlobe";
+
 
 #=
 ## SLR pulse(s)
@@ -89,7 +90,9 @@ pulse2 = dzrf(; n, tb, ptype, ftype=ftype2, d1, d2, cancel_alpha_phs)
 pulse2 = factor * real(pulse2)
 label2 = "SLR $ptype $ftype2" ;
 
-# Plot pulses
+#=
+## Plot pulses
+=#
 t = ((0:(n-1)) / n .- 0.5) * tRF_ms # [-tRF_ms/2, tRF_ms/2)
 prf = plot(t, [pulse0 pulse1 pulse2],
   label = [label0 label1 label2],
@@ -104,12 +107,16 @@ prompt()
 
 #=
 ## RF waveforms
-using the rephasing gradient from rf0:
+For now, use the rephasing gradient from `rf0`.
+The rephasing gradient amplitude
+could be adjusted
+to better flatten the phase.
 =#
-wave1 = pulse1 * b1_gauss(1, Δt_ms)
+#src todo: optimize rephasing gradient
+wave1 = pulse1 * b1_gauss(1, Δt_ms) # convert to Gauss for RF()
 wave2 = pulse2 * b1_gauss(1, Δt_ms)
 rf1 = RF(wave1, Δt_ms, 0, rf0.grad)
-rf2 = RF(wave2, Δt_ms, 0, rf0.grad)
+rf2 = RF(wave2, Δt_ms, 0, rf0.grad);
 
 
 #=
@@ -129,7 +136,7 @@ end;
 
 
 #=
-## Excite the spins with the RF, then apply rephasing gradient
+## Excite and rephase the spins.
 =#
 function exciter(rf;
     T2_ms::Real = T2_ms,
@@ -146,11 +153,11 @@ end
 
 spins0, signal0 = exciter(rf0)
 spins1, signal1 = exciter(rf1)
-spins2, signal2 = exciter(rf2)
+spins2, signal2 = exciter(rf2);
 
 
 #=
-## Plot slice profile
+## Plot slice profiles
 =#
 function plot_profile(spins, plabel)
     mx = map(spin -> spin.M.x, spins)
@@ -233,6 +240,3 @@ pmag2 = plot_profile2([signal0 signal1 signal2], labels)
 
 #
 prompt()
-
-
-#src include("../../../inc/reproduce.jl")
