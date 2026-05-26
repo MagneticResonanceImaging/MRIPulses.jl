@@ -1,10 +1,16 @@
-# leja.jl
+#=
+slr/leja.jl
+Polynomial root ordering.
+=#
 
 
 """
     leja(r)
 
 Order roots `r` using Leja ordering for numerical stability.
+
+See Reichel, LAA, 1991:
+https://doi.org/10.1016/0024-3795(91)90386-B
 """
 function leja(r::AbstractVector{T}) where T
     n = length(r)

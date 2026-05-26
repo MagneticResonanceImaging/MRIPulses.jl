@@ -2,7 +2,7 @@
 CurrentModule = MRIPulses
 ```
 
-# Template.jl Documentation
+# MRIPulses.jl Documentation
 
 ## Overview
 

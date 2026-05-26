@@ -1,5 +1,5 @@
 #=
-slr.jl
+slr/slr.jl
 Shinnar-Le Roux (SLR) RF pulse design for MRI
 Initial translation from SigPy performed by Gemini 0.39.0.
 https://github.com/mikgroup/sigpy/blob/main/sigpy/mri/rf/slr.py
