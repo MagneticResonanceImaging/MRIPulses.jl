@@ -39,7 +39,7 @@ end
 # Run `Pkg.add()` in the preceding code block first, if needed.
 
 using BlochSim: rf_slice, Spin, Position, signal, RF, b1_gauss, rf_slice
-using BlochSim: excite!, spoil!
+using BlochSim: excite!, spoil!, duration
 using LaTeXStrings
 using MRIPulses: dzrf
 using MIRTjim: jim, prompt
@@ -57,7 +57,7 @@ isinteractive() ? jim(:prompt, true) : prompt(:draw);
 #=
 ## Baseline sinc pulse
 =#
-tRF_ms = 0.5
+tRF_ms = 1
 n = 2^8 # how many samples
 Δt_ms = tRF_ms / n # 3.90625 μs
 nlobe = 3
@@ -142,12 +142,18 @@ function exciter(rf;
     T2_ms::Real = T2_ms,
     spins = make_spins(Mz0, T1_ms, T2_ms, Δf_Hz),
     rephasing = rephasing0,
+    revert0::Bool = false, # revert signal back to center of RF pulse?
 )
     map(spins) do spin
         excite!(spin, rf)
         spoil!(spin, rephasing)
     end;
     signal_out = signal.(spins)
+    if revert0
+        time_back_ms = duration(rf)/2 + rephasing.Tg
+        signal_out .*= exp(time_back_ms / T2_ms) * # un-decay
+            cis(2π * (time_back_ms/1000) * Δf_Hz) # un-precess
+    end
     return spins, signal_out
 end
 
