@@ -18,30 +18,18 @@ export dzrf, dzls, msinc, dzmp, fmp, dzlp, b2rf, b2a, mag2mp, ab2rf,
 # --- Internal Helper Functions ---
 
 """
-    sp_fft(x, center=true)
+    sp_fft(x)
 
-SigPy-style FFT. Defaults to centered FFT.
+SigPy-style centered FFT.
 """
-function sp_fft(x::AbstractArray; center::Bool=true)
-    if center
-        return fftshift(fft(ifftshift(x)))
-    else
-        return fft(x)
-    end
-end
+sp_fft(x::AbstractArray) = fftshift(fft(ifftshift(x)))
 
 """
     sp_ifft(x, center=true)
 
-SigPy-style IFFT. Defaults to centered IFFT.
+SigPy-style centered IFFT.
 """
-function sp_ifft(x::AbstractArray; center::Bool=true)
-    if center
-        return fftshift(ifft(ifftshift(x)))
-    else
-        return ifft(x)
-    end
-end
+sp_ifft(x::AbstractArray) = fftshift(ifft(ifftshift(x)))
 
 
 # --- Primary Design Functions ---
