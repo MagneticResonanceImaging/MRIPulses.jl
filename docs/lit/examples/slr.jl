@@ -39,7 +39,7 @@ end
 # Run `Pkg.add()` in the preceding code block first, if needed.
 
 using BlochSim: rf_slice, Spin, Position, signal, RF, b1_gauss, rf_slice
-using BlochSim: excite!, spoil!
+using BlochSim: excite!, spoil!, duration
 using LaTeXStrings
 using MRIPulses: dzrf
 using MIRTjim: jim, prompt
@@ -57,7 +57,7 @@ isinteractive() ? jim(:prompt, true) : prompt(:draw);
 #=
 ## Baseline sinc pulse
 =#
-tRF_ms = 0.5
+tRF_ms = 1
 n = 2^8 # how many samples
 Δt_ms = tRF_ms / n # 3.90625 μs
 nlobe = 3
@@ -142,12 +142,18 @@ function exciter(rf;
     T2_ms::Real = T2_ms,
     spins = make_spins(Mz0, T1_ms, T2_ms, Δf_Hz),
     rephasing = rephasing0,
+    revert0::Bool = false, # revert signal back to center of RF pulse?
 )
     map(spins) do spin
         excite!(spin, rf)
         spoil!(spin, rephasing)
     end;
     signal_out = signal.(spins)
+    if revert0
+        time_back_ms = duration(rf)/2 + rephasing.Tg
+        signal_out .*= exp(time_back_ms / T2_ms) * # un-decay
+            cis(2π * (time_back_ms/1000) * Δf_Hz) # un-precess
+    end
     return spins, signal_out
 end
 
@@ -202,12 +208,12 @@ prompt()
 #=
 ## Compare slice profiles
 =#
-function plot_profile2(signals, labels)
+function plot_profile2(signals, labels;
+    title = latexstring("|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)° \\ T_2=$T2_ms \\ \\mathrm{ms}"),
+)
     xaxis = ("z [cm]", (-1,1), [-1, -slice_width/2, 0, slice_width/2, 1])
     ytick = ([0, sin(α_rad), 1], ["0", "sin($(α_deg)°)", 1])
-    plot(; title =
-        latexstring("|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)° \\ T_2=$T2_ms \\ \\mathrm{ms}"),
-        xaxis, yaxis = ("", (-0.2,1), ytick), legend = :right)
+    plot(; title, xaxis, yaxis = ("", (-0.2,1), ytick), legend = :right)
     plot!(zpos, abs.(signals); label=labels)
     plot!(zpos, imag.(signals); color=(1:3)')
 end
@@ -237,6 +243,35 @@ spins0, signal0 = exciter(rf0; T2_ms)
 spins1, signal1 = exciter(rf1; T2_ms)
 spins2, signal2 = exciter(rf2; T2_ms)
 pmag2 = plot_profile2([signal0 signal1 signal2], labels)
+
+#
+prompt()
+
+
+#=
+Plot profiles at end of the rephasing gradient for two T2 values
+=#
+T2 = [80, 10]
+_, signal2a = exciter(rf2; T2_ms = T2[1], revert0 = false)
+_, signal2b = exciter(rf2; T2_ms = T2[2], revert0 = false)
+labels = [label2 * " T2=$t ms" for t in T2']
+pmag3 = plot_profile2([signal2a signal2b], labels; title =
+ latexstring("|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)°"),
+)
+
+#
+prompt()
+
+#=
+Rewind magnetization to middle of RF pulse
+=#
+T2 = [80, 10]
+_, signal2a = exciter(rf2; T2_ms = T2[1], revert0 = true)
+_, signal2b = exciter(rf2; T2_ms = T2[2], revert0 = true)
+labels = [label2 * " T2=$t ms" for t in T2']
+pmag3 = plot_profile2([signal2a signal2b], labels; title =
+ latexstring("|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)° \\ \\mathrm{(rewound \\ to \\ RF \\ center)}"),
+)
 
 #
 prompt()
