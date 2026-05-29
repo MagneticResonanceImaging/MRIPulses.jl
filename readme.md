@@ -18,6 +18,31 @@ Currently supports the following RF pulse design methods
 
 See the documentation for example demos.
 
+The primary starting point is the function
+`dzrf`
+for designing RF pulses.
+See the
+[methods list](https://magneticresonanceimaging.github.io/MRIPulses.jl/stable/methods)
+for documentation.
+
+
+## License notes
+
+The SLR design code was translated to Julia
+from
+[SigPy](https://github.com/mikgroup/sigpy/blob/main/sigpy/mri/rf/slr.py)
+which has a
+[BSD 3-Clause](https://github.com/mikgroup/sigpy/blob/main/LICENSE)
+license.
+
+That SigPy code itself
+looks to have been translated
+from
+[John Pauly's circa 1992 Matlab code](https://github.com/toppeMRI/toppe/tree/main/%2Btoppe/%2Butils/%2Brf/%2Bjpauly)
+that does not seem to include a license file
+but includes the line
+"(c) Board of Trustees, Leland Stanford Junior University."
+
 
 ## Related packages
 
