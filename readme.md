@@ -11,9 +11,6 @@ https://github.com/MagneticResonanceImaging/MRIPulses.jl
 [![license][license-img]][license-url]
 [![Aqua QA][aqua-img]][aqua-url]
 [![code-style][code-blue-img]][code-blue-url]
-[![deps](https://juliahub.com/docs/MRIPulses/deps.svg)](https://juliahub.com/ui/Packages/MRIPulses)
-[![version](https://juliahub.com/docs/MRIPulses/version.svg)](https://juliahub.com/ui/Packages/MRIPulses)
-[![pkgeval](https://juliahub.com/docs/MRIPulses/pkgeval.svg)](https://juliahub.com/ui/Packages/MRIPulses)
 <img src="docs/src/assets/logo.png" alt="logo" width="150">
 
 Currently supports the following RF pulse design methods
@@ -43,10 +40,8 @@ Tested with Julia ≥ 1.12.
 <!-- URLs -->
 [action-img]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/workflows/CI/badge.svg
 [action-url]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/actions
-[build-img]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/workflows/CI/badge.svg?branch=main
-[build-url]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/actions?query=workflow%3ACI+branch%3Amain
-[pkgeval-img]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/L/MRIPulses.svg
-[pkgeval-url]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/L/MRIPulses.html
+[pkgeval-img]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.svg
+[pkgeval-url]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.html
 [code-blue-img]: https://img.shields.io/badge/code%20style-blue-4495d1.svg
 [code-blue-url]: https://github.com/invenia/BlueStyle
 [codecov-img]: https://codecov.io/github/MagneticResonanceImaging/MRIPulses.jl/coverage.svg?branch=main
