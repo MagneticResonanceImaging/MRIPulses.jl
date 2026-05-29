@@ -7,6 +7,7 @@ include("aqua.jl")
 include("helper.jl")
 
 include("slr.jl")
+include("matlab.jl")
 
 @testset "ambiguities" begin
     @test isempty(detect_ambiguities(MRIPulses))
