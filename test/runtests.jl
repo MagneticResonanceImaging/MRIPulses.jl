@@ -5,6 +5,7 @@ using Test: @test, @testset, detect_ambiguities
 
 include("aqua.jl")
 include("helper.jl")
+include("matrix.jl")
 
 include("slr.jl")
 include("matlab.jl")

@@ -4,7 +4,6 @@ using FFTW: fft
 using MRIPulses: dinf, dzlp, dzls, dzmp, dzrf, msinc
 using MRIPulses: b2a, b2rf, mag2mp, ab2rf, root_flip, leja
 using MRIPulses: dz_gslider_rf, dz_hadamard_b, dz_recursive_rf, calc_ripples
-using MRIPulses: hankel, toeplitz, hadamard
 using Test: @test, @testset, @test_throws, @inferred
 
 
@@ -19,31 +18,11 @@ using Test: @test, @testset, @test_throws, @inferred
 end
 
 
-@testset "Internal Helpers" begin
-    @testset "toeplitz" begin
-        c = [1, 2, 3]
-        T = @inferred toeplitz(c)
-        @test T == [1 2 3; 2 1 2; 3 2 1]
-    end
-
-    @testset "hankel" begin
-        c = [1, 2, 3]
-        H = @inferred hankel(c)
-        @test H == [1 2 3; 2 3 0; 3 0 0]
-    end
-
-    @testset "leja" begin
-        r = [1.0, 0.5, 0.1]
-        rl = @inferred leja(r)
-        @test length(rl) == 3
-        @test sort(abs.(rl)) == sort(abs.(r))
-    end
-
-    @testset "hadamard" begin
-        @test @inferred hadamard(1) == [1.0;;]
-        @test @inferred hadamard(2) == [1.0 1.0; 1.0 -1.0]
-        @test_throws String hadamard(3)
-    end
+@testset "leja" begin
+    r = [1.0, 0.5, 0.1]
+    rl = @inferred leja(r)
+    @test length(rl) == 3
+    @test sort(abs.(rl)) == sort(abs.(r))
 end
 
 
