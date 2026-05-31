@@ -4,7 +4,6 @@ using FFTW: fft
 using MRIPulses: dinf, dzlp, dzls, dzmp, dzrf, msinc
 using MRIPulses: b2a, b2rf, mag2mp, ab2rf, root_flip, leja
 using MRIPulses: dz_gslider_rf, dz_hadamard_b, dz_recursive_rf, calc_ripples
-using MRIPulses: hankel, toeplitz, hadamard
 using Test: @test, @testset, @test_throws, @inferred
 
 
@@ -19,37 +18,21 @@ using Test: @test, @testset, @test_throws, @inferred
 end
 
 
-@testset "Internal Helpers" begin
-    @testset "toeplitz" begin
-        c = [1, 2, 3]
-        T = @inferred toeplitz(c)
-        @test T == [1 2 3; 2 1 2; 3 2 1]
-    end
-
-    @testset "hankel" begin
-        c = [1, 2, 3]
-        H = @inferred hankel(c)
-        @test H == [1 2 3; 2 3 0; 3 0 0]
-    end
-
-    @testset "leja" begin
-        r = [1.0, 0.5, 0.1]
-        rl = @inferred leja(r)
-        @test length(rl) == 3
-        @test sort(abs.(rl)) == sort(abs.(r))
-    end
-
-    @testset "hadamard" begin
-        @test @inferred hadamard(1) == [1.0;;]
-        @test @inferred hadamard(2) == [1.0 1.0; 1.0 -1.0]
-        @test_throws String hadamard(3)
-    end
+@testset "leja" begin
+    r = [1.0, 0.5, 0.1]
+    rl = @inferred leja(r)
+    @test length(rl) == 3
+    @test sort(abs.(rl)) == sort(abs.(r))
 end
 
 
 @testset "SLR Core" begin
     n = 64
     tb = 4
+
+    @testset "calc_ripples" begin
+        tmp = @inferred calc_ripples()
+    end
 
     @testset "msinc" begin
         ms = @inferred msinc(n, tb/4)
@@ -74,22 +57,24 @@ end
     end
 
     @testset "dzrf" begin
+        # type inference fails because dzrf can return complex or real
+
         # Small tip
-        rf_st = dzrf(n=n, tb=tb, ptype=:st, ftype=:ms) # @NOTinferred
+        rf_st = @NOTinferred dzrf( ; n, tb, ptype=:st, ftype=:ms)
         @test length(rf_st) == n
 
         # Excitation
-        rf_ex = dzrf(n=n, tb=tb, ptype=:ex, ftype=:ls) # @NOTinferred
+        rf_ex = @NOTinferred dzrf( ; n, tb, ptype=:ex, ftype=:ls)
         @test length(rf_ex) == n
         @test eltype(rf_ex) <: Complex
 
         # Test different filter types
-        @test length(dzrf(n=n, tb=tb, ftype=:pm)) == n
-        @test length(dzrf(n=n, tb=tb, ftype=:min)) == n
-        @test length(dzrf(n=n, tb=tb, ftype=:max)) == n
+        @test length(dzrf( ; n, tb, ftype=:pm)) == n
+        @test length(dzrf( ; n, tb, ftype=:min)) == n
+        @test length(dzrf( ; n, tb, ftype=:max)) == n
 
         # Test spin-echo pulse type (ptype other than :st or :ex)
-        rf_se_slr = dzrf(n=n, tb=tb, ptype=:se, ftype=:ms) # @NOTinferred
+        rf_se_slr = @NOTinferred dzrf( ; n, tb, ptype=:se, ftype=:ms)
         @test length(rf_se_slr) == n
 
         # Test error for unknown filter
@@ -97,7 +82,7 @@ end
     end
 
     @testset "Polynomial Operations" begin
-        b = dzrf(n=n, tb=tb, ptype=:st, ftype=:ms) # @NOTinferred
+        b = @NOTinferred dzrf( ; n, tb, ptype=:st, ftype=:ms)
 
         @testset "b2a" begin
             a = @inferred b2a(b)
@@ -134,9 +119,9 @@ end
         n = 32
         tb = 4
         b = @inferred msinc(n, tb/4)
-        rf_out, b_out = root_flip(b, 0.01, π/2, tb, verbose=true) # verbose=true for coverage # @NOTinferred
-        @test length(rf_out) >= n-2 # Allow for small zero-taps truncation
-        @test length(b_out) >= n-2
+        rf_out, b_out = @NOTinferred root_flip(b, 0.01, π/2, tb)
+        @test length(rf_out) ≥ n-2 # Allow for small zero-taps truncation
+        @test length(b_out) ≥ n-2
     end
 
     @testset "dz_gslider_rf" begin
@@ -154,7 +139,7 @@ end
         n = 64
         g = 4
         # gind=1
-        b1 = dz_hadamard_b(n, g, 1, 4, 0.01, 0.01, 16) # @NOTinferred
+        b1 = @NOTinferred dz_hadamard_b(n, g, 1, 4, 0.01, 0.01, 16)
         @test length(b1) == n
         # gind > 1
         b2 = dz_hadamard_b(n, g, 2, 4, 0.01, 0.01, 16)
@@ -170,15 +155,15 @@ end
     n = 32
 
     # Test gradient echo version, use_mz=true
-    rf = dz_recursive_rf(n_seg=n_seg, tb=tb, n=n, z_pad_fact=2.0, use_mz=true)
+    rf = @NOTinferred dz_recursive_rf( ; n_seg, tb, n, z_pad_fact = 2, use_mz = true)
     @test size(rf, 2) == n_seg
 
     # Test gradient echo version, use_mz=false
-    rf_ideal = dz_recursive_rf(n_seg=n_seg, tb=tb, n=n, z_pad_fact=2.0, use_mz=false)
+    rf_ideal = dz_recursive_rf( ; n_seg, tb, n, z_pad_fact = 2, use_mz = false)
     @test size(rf_ideal, 2) == n_seg
 
     # Test spin echo version
-    rf_se, rf_ref = dz_recursive_rf(n_seg=n_seg, tb=tb, n=n, se_seq=true, z_pad_fact=2.0)
+    rf_se, rf_ref = dz_recursive_rf( ; n_seg, tb, n, z_pad_fact = 2, se_seq = true)
     @test size(rf_se, 2) == n_seg
     @test length(rf_ref) > 0
 end

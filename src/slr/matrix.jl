@@ -9,10 +9,11 @@ matrix helper functions
 
 Construct a Toeplitz matrix from column `c` and row `r`.
 """
-function toeplitz(c::AbstractVector, r::AbstractVector=c)
+function toeplitz(c::AbstractVector{Tc}, r::AbstractVector{Tr} = c) where {Tc, Tr}
+    T = promote_type(Tc, Tr)
     nc = length(c)
     nr = length(r)
-    res = zeros(eltype(c), nc, nr)
+    res = zeros(T, nc, nr)
     for j in 1:nr, i in 1:nc
         if i ≥ j
             res[i, j] = c[i - j + 1]
@@ -25,14 +26,18 @@ end
 
 
 """
-    hankel(c, r=zeros(eltype(c), length(c)))
+    hankel(c, r = zeros(eltype(c), length(c)))
 
 Construct a Hankel matrix from column `c` and row `r`.
 """
-function hankel(c::AbstractVector, r::AbstractVector=zeros(eltype(c), length(c)))
+function hankel(
+    c::AbstractVector{Tc},
+    r::AbstractVector{Tr} = zeros(Tc, length(c)),
+) where {Tc, Tr}
+    T = promote_type(Tc, Tr)
     nc = length(c)
     nr = length(r)
-    res = zeros(eltype(c), nc, nr)
+    res = zeros(T, nc, nr)
     for j in 1:nr, i in 1:nc
         idx = i + j - 1
         if idx ≤ nc
