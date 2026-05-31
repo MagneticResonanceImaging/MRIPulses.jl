@@ -1,4 +1,4 @@
-# slr/util.jl
+# slr/dinf.jl
 
 
 """
