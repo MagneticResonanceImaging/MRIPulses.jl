@@ -32,7 +32,7 @@ SigPy-style centered IFFT.
 sp_ifft(x::AbstractArray) = fftshift(ifft(ifftshift(x)))
 
 
-# --- Primary Design Functions ---
+# --- Primary RF Pulse Design Functions ---
 
 """
     dzrf(n=64, tb=4, ptype=:st, ftype=:ls, d1=0.01, d2=0.01, cancel_alpha_phs=false)
@@ -101,19 +101,24 @@ Calculate effective SLR ripple levels for a specific pulse type.
 # Returns
 - `Tuple{Real, Real, Real}`: `(bsf, d1, d2)`.
 """
-function calc_ripples(ptype::Symbol = :st, d1::Real = 0.01, d2::Real = 0.01)
+function calc_ripples(
+    ptype::Symbol = :st,
+    d1::T1 = 0.01, d2::T2 = 0.01,
+) where {T1 <: Real, T2 <: Real}
+
+    T = promote_type(T1, T2, Float32)
     if ptype === :st
-        bsf = 1.0
+        bsf = 1
     elseif ptype === :ex
         bsf = sqrt(0.5)
         d1 = sqrt(d1 / 2)
         d2 = d2 / sqrt(2)
     elseif ptype === :se
-        bsf = 1.0
+        bsf = 1
         d1 /= 4
         d2 = sqrt(d2)
     elseif ptype === :inv
-        bsf = 1.0
+        bsf = 1
         d1 /= 8
         d2 = sqrt(d2 / 2)
     elseif ptype === :sat
@@ -123,7 +128,7 @@ function calc_ripples(ptype::Symbol = :st, d1::Real = 0.01, d2::Real = 0.01)
     else
         error("Pulse type ($ptype) is not recognized.")
     end
-    return bsf, d1, d2
+    return T(bsf), T(d1), T(d2)
 end
 
 
@@ -273,7 +278,9 @@ Design a gSlider SLR beta parameter.
 # References
 - Setsompop, K. et al. (2018). 'High-resolution in vivo diffusion imaging of the
   human brain with generalized slice dithered enhanced resolution:
-  Simultaneous multislice (gSlider-SMS)'. Magn. Reson. Med. 79, 141–151.
+  Simultaneous multislice (gSlider-SMS)'.
+  Magn. Reson. Med. 79, 141–151.
+  https://doi.org/10.1002/mrm.26653
 """
 function dz_gslider_b(n::Int = 128, g::Int = 5, gind::Int = 1,
      tb::Real = 4, d1::Real = 0.01, d2::Real = 0.01, phi::Real = π, shift::Int = 32,
@@ -394,7 +401,7 @@ Convert an SLR beta parameter to an RF pulse.
 
 # Arguments
 - `b::AbstractVector`: SLR beta parameter.
-- `cancel_alpha_phs::Bool`: Cancel alpha phase.
+- `cancel_alpha_phs::Bool`: Cancel alpha phase?
 
 # Returns
 - `Vector{ComplexF64}`: Designed RF pulse.
@@ -402,7 +409,7 @@ Convert an SLR beta parameter to an RF pulse.
 function b2rf(b::AbstractVector, cancel_alpha_phs::Bool = false)
     a = b2a(b)
     if cancel_alpha_phs
-        b_a_phase = fft(b) .* cis.(-angle.(fft(reverse(a)))) # todo: use sign
+        b_a_phase = fft(b) ./ sign.(fft(reverse(a)))
         b = ifft(b_a_phase)
     end
     return ab2rf(a, b)
@@ -478,7 +485,8 @@ function ab2rf(a::AbstractVector, b::AbstractVector)
         ratio = b[ii] / a[ii]
         cj = sqrt(1 / (1 + abs2(ratio)))
         sj = conj(cj * ratio)
-        rf[ii] = 2 * atan(abs(sj), cj) * cis(angle(sj)) # todo sign
+        rf[ii] = 2 * atan(abs(sj), cj) * sign(sj)
+
         if ii > 1
             at = @. cj * a + sj * b
             bt = @. -conj(sj) * a + cj * b
@@ -490,7 +498,7 @@ end
 
 
 """
-    root_flip(b, d1, flip, tb; verbose=false)
+    root_flip(b, d1, flip, tb)
 
 Exhaustive root-flip pattern search for minimum peak B1.
 
@@ -499,16 +507,17 @@ Exhaustive root-flip pattern search for minimum peak B1.
 - `d1::Real`: Passband ripple level.
 - `flip::Real`: Target flip angle.
 - `tb::Real`: pulse time bandwidth product.
-- `verbose::Bool`: Print feedback on iterations.
 
 # Returns
 - `Tuple{Vector{ComplexF64}, Vector{Float64}}`: `(rf_out, b_out)`.
 
 # References
-- Sharma, A., Lustig, M. and Grissom, W. (2016). 'Root-flipped multiband refocusing pulses'.
+- Sharma, A., Lustig, M. and Grissom, W. (2016).
+ 'Root-flipped multiband refocusing pulses'.
   Magn. Reson. Med. 75(1), 227-237.
+  https://doi.org/10.1002/mrm.25629
 """
-function root_flip(b::AbstractVector, d1::Real, flip::Real, tb::Real; verbose::Bool=false)
+function root_flip(b::AbstractVector, d1::Real, flip::Real, tb::Real)
     n = length(b)
     w = range(0, π, 512)
     b ./= maximum(abs, freqresp(PolynomialRatio(b, [1.0]), w))
@@ -607,7 +616,7 @@ function dz_recursive_rf(;
     rf = zeros(ComplexF64, n_tot, n_seg)
     a = b2a(b[:, 1])
     if cancel_alpha_phs
-        b_a_phase = fft(b[:, 1]) .* cis.(-angle.(fft(reverse(a)))) # todo: sign
+        b_a_phase = fft(b[:, 1]) ./ sign.(fft(reverse(a)))
         b[:, 1] .= ifft(b_a_phase)
     end
     rf[:, 1] .= ab2rf(a, b[:, 1])

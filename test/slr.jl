@@ -51,6 +51,10 @@ end
     n = 64
     tb = 4
 
+    @testset "calc_ripples" begin
+        tmp = @inferred calc_ripples()
+    end
+
     @testset "msinc" begin
         ms = @inferred msinc(n, tb/4)
         @test length(ms) == n
@@ -134,9 +138,9 @@ end
         n = 32
         tb = 4
         b = @inferred msinc(n, tb/4)
-        rf_out, b_out = root_flip(b, 0.01, π/2, tb, verbose=true) # verbose=true for coverage # @NOTinferred
-        @test length(rf_out) >= n-2 # Allow for small zero-taps truncation
-        @test length(b_out) >= n-2
+        rf_out, b_out = root_flip(b, 0.01, π/2, tb) # @NOTinferred
+        @test length(rf_out) ≥ n-2 # Allow for small zero-taps truncation
+        @test length(b_out) ≥ n-2
     end
 
     @testset "dz_gslider_rf" begin
