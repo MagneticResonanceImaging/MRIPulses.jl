@@ -38,7 +38,8 @@ end
 # Tell this Julia session to use the following packages for this example.
 # Run `Pkg.add()` in the preceding code block first, if needed.
 
-using BlochSim: rf_slice, Spin, Position, signal, RF, b1_gauss, rf_slice
+using BlochSim: Spin, Position, signal, RF
+using BlochSim: rf_slice, b1_gauss, rf_gauss
 using BlochSim: excite!, spoil!, duration
 using LaTeXStrings
 using MRIPulses: dzrf
@@ -65,7 +66,8 @@ nlobe = 3
 α_rad = deg2rad(α_deg)
 slice_width = 0.5 # cm
 rf0, rephasing0 = rf_slice(tRF_ms ; nlobe, α_rad, Δt_ms, slice_width)
-pulse0 = real(@. rf0.α * cis(rf0.θ)) # / b1_gauss(1, rf0.Δt)
+pulse0 = real(@. rf0.α * cis(rf0.θ)) # radians
+#src pulse0 = real(rf_gauss(rf0)) / b1_gauss(1, Δt_ms) # radians todo later
 label0 = "Sinc nlobe=$nlobe";
 
 
@@ -74,8 +76,13 @@ label0 = "Sinc nlobe=$nlobe";
 =#
 tb = 2nlobe # time-bandwidth
 d1, d2 = 0.01, 0.01 # δ₁, δ₂ ripple design parameters
-#src ptype = :ex; factor = 1 # (π/2 excitation)
-ptype = :st; factor = 2sin(α_rad/2) # todo empirical factor for :st case
+if 0 < α_rad < π/2 # use small tip :st and scale by flip angle
+    ptype = :st; factor = α_rad
+elseif π/2 ≤ α_rad < π # use :ex and scale up
+    ptype = :ex; factor = α_rad/(π/2)
+else
+    error("unsupported flip $α_deg")
+end
 ftype1 = :pm
 ftype2 = :ls
 cancel_alpha_phs = false
@@ -89,6 +96,12 @@ pulse2 = dzrf(; n, tb, ptype, ftype=ftype2, d1, d2, cancel_alpha_phs)
 @assert pulse2 ≈ real(pulse2)
 pulse2 = factor * real(pulse2)
 label2 = "SLR $ptype $ftype2" ;
+
+#src pulse3 = dzrf(; n, tb, ptype=:ex, ftype=ftype2, d1, d2, cancel_alpha_phs)
+#src @assert pulse3 ≈ real(pulse3)
+#src pulse3 = real(pulse3)
+#src plot([pulse2 pulse3], label = ["st $α_deg" "ex"])
+
 
 #=
 ## Plot pulses
@@ -107,7 +120,7 @@ prompt()
 
 #=
 ## RF waveforms
-For now, use the rephasing gradient from `rf0`.
+Use the rephasing gradient from `rf0`.
 The rephasing gradient amplitude
 could be adjusted
 to better flatten the phase.
@@ -125,7 +138,6 @@ For a range of z-positions to examine slice profile
 =#
 
 Mz0, T1_ms, T2_ms, Δf_Hz = 1, 400, 80, 9 # tissue parameters
-
 zpos = range(-1, 1, 201) # z positions (cm)
 zfov = only(diff([extrema(zpos)...])) # 2 cm
 
@@ -136,7 +148,7 @@ end;
 
 
 #=
-## Excite and rephase the spins.
+## Excite and rephase the spins
 =#
 function exciter(rf;
     T2_ms::Real = T2_ms,
@@ -165,7 +177,11 @@ spins2, signal2 = exciter(rf2);
 #=
 ## Plot slice profiles
 =#
-function plot_profile(spins, plabel)
+function plot_profile(spins, plabel; α_deg = α_deg,
+    ymin = -0.2,
+    ytick = ([0, cos(α_rad), sin(α_rad), 1],
+        ["0", "cos($(α_deg)°)", "sin($(α_deg)°)", 1]),
+)
     mx = map(spin -> spin.M.x, spins)
     my = map(spin -> spin.M.y, spins)
     mz = map(spin -> spin.M.z, spins)
@@ -173,9 +189,7 @@ function plot_profile(spins, plabel)
     mpha = @. atan(my, mx)
 
     xaxis = ("z [cm]", (-1,1), [-1, -slice_width/2, 0, slice_width/2, 1])
-    ytick = ([0, cos(α_rad), sin(α_rad), 1],
-        ["0", "cos($(α_deg)°)", "sin($(α_deg)°)", 1])
-    pmag = plot(; xaxis, yaxis = ("", (-0.2,1), ytick), legend = :right)
+    pmag = plot(; xaxis, yaxis = ("", (ymin,1), ytick), legend = :right)
     plot!(zpos, mx, label = "Mx")
     plot!(zpos, my, label = "My")
     plot!(zpos, mz, label = "Mz")
@@ -262,6 +276,7 @@ pmag3 = plot_profile2([signal2a signal2b], labels; title =
 #
 prompt()
 
+
 #=
 Rewind magnetization to middle of RF pulse
 =#
@@ -272,6 +287,66 @@ labels = [label2 * " T2=$t ms" for t in T2']
 pmag3 = plot_profile2([signal2a signal2b], labels; title =
  latexstring("|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)° \\ \\mathrm{(rewound \\ to \\ RF \\ center)}"),
 )
+
+#
+prompt()
+
+
+#=
+## SLR Inversion pulse
+=#
+ptype = :inv
+pulse8 = dzrf(; n, tb, ptype, ftype=ftype1, d1, d2, cancel_alpha_phs)
+@assert pulse8 ≈ real(pulse8)
+pulse8 = real(pulse8)
+label8 = "SLR $ptype $ftype1"
+
+pulse9 = dzrf(; n, tb, ptype, ftype=ftype2, d1, d2, cancel_alpha_phs)
+@assert pulse9 ≈ real(pulse9)
+pulse9 = real(pulse9)
+label9 = "SLR $ptype $ftype2"
+
+pulse7 = pulse0 * (π / α_rad) # scaled sinc for comparison
+
+plot(pulse8)
+
+prf8 = plot(t, [pulse7 pulse8 pulse9],
+  label = [label0 label8 label9],
+  xaxis = ("t [ms]", (-1,1) .* (tRF_ms/2), ),
+  yaxis = ("RF(t) [rad]", ),
+  title = "RF pulses: α=$(α_deg)° tRF=$tRF_ms ms width=$slice_width cm",
+)
+
+#
+prompt()
+
+
+# Inversion profiles
+
+rf7, _ = rf_slice(tRF_ms ; nlobe, α_rad = π, Δt_ms, slice_width)
+wave8 = pulse8 * b1_gauss(1, Δt_ms) # convert to Gauss for RF()
+wave9 = pulse9 * b1_gauss(1, Δt_ms)
+rf8 = RF(wave8, Δt_ms, 0, rf0.grad)
+rf9 = RF(wave9, Δt_ms, 0, rf0.grad);
+
+spins7, signal7 = exciter(rf7)
+spins8, signal8 = exciter(rf8)
+spins9, signal9 = exciter(rf9);
+
+
+pp7 = plot_profile(spins7, label0; α_deg = 180, ymin = -1, ytick = -1:1)
+
+#
+prompt()
+
+
+pp8 = plot_profile(spins8, label8; α_deg = 180, ymin = -1, ytick = -1:1)
+
+#
+prompt()
+
+
+pp9 = plot_profile(spins9, label9; α_deg = 180, ymin = -1, ytick = -1:1)
 
 #
 prompt()
