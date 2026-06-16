@@ -3,6 +3,9 @@ uuid = "0dd308a2-b030-4bfa-a19c-6e4aba836528"
 version = "0.0.2"
 authors = ["Jeff Fessler and contributors <JeffFessler@users.noreply.github.com>"]
 
+[workspace]
+projects = ["docs", "test"]
+
 [deps]
 DSP = "717857b8-e6f2-59f4-9121-6e50c889abd2"
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
@@ -12,4 +15,4 @@ Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
 DSP = "0.8"
 FFTW = "1"
 Polynomials = "4"
-julia = "1.12"
+julia = "1.12.6"

@@ -2,16 +2,17 @@
 A Julia package for designing RF pulses for MRI.
 
 https://github.com/MagneticResonanceImaging/MRIPulses.jl
+<img src="docs/src/assets/logo.png" alt="logo" width="150">
 
 [![docs-stable][docs-stable-img]][docs-stable-url]
 [![docs-dev][docs-dev-img]][docs-dev-url]
-[![action status][action-img]][action-url]
-[![pkgeval status][pkgeval-img]][pkgeval-url]
-[![codecov][codecov-img]][codecov-url]
-[![license][license-img]][license-url]
+[![action][action-img]][action-url]
 [![Aqua QA][aqua-img]][aqua-url]
-[![code-style][code-blue-img]][code-blue-url]
-<img src="docs/src/assets/logo.png" alt="logo" width="150">
+[![codecov][codecov-img]][codecov-url]
+[![deps][deps-img]][deps-url]
+[![license][license-img]][license-url]
+[![pkgeval][pkgeval-img]][pkgeval-url]
+[![version][ver-img]][ver-url]
 
 Currently supports the following RF pulse design methods
 - Shinnar-Le Roux (SLR)
@@ -65,17 +66,26 @@ Tested with Julia ≥ 1.12.
 <!-- URLs -->
 [action-img]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/workflows/CI/badge.svg
 [action-url]: https://github.com/MagneticResonanceImaging/MRIPulses.jl/actions
-[pkgeval-img]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.svg
-[pkgeval-url]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.html
-[code-blue-img]: https://img.shields.io/badge/code%20style-blue-4495d1.svg
-[code-blue-url]: https://github.com/invenia/BlueStyle
+
+[aqua-img]: https://juliatesting.github.io/Aqua.jl/dev/assets/badge.svg
+[aqua-url]: https://github.com/JuliaTesting/Aqua.jl
+
 [codecov-img]: https://codecov.io/github/MagneticResonanceImaging/MRIPulses.jl/coverage.svg?branch=main
 [codecov-url]: https://codecov.io/github/MagneticResonanceImaging/MRIPulses.jl?branch=main
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://MagneticResonanceImaging.github.io/MRIPulses.jl/stable
+
+[deps-img]: https://juliahub.com/docs/MRIPulses/deps.svg
+[deps-url]: https://juliahub.com/ui/Packages/MRIPulses
+
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
 [docs-dev-url]: https://MagneticResonanceImaging.github.io/MRIPulses.jl/dev
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://MagneticResonanceImaging.github.io/MRIPulses.jl/stable
+
 [license-img]: https://img.shields.io/badge/license-MIT-brightgreen.svg
 [license-url]: LICENSE
-[aqua-img]: https://img.shields.io/badge/Aqua.jl-%F0%9F%8C%A2-aqua.svg
-[aqua-url]: https://github.com/JuliaTesting/Aqua.jl
+
+[pkgeval-img]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.svg
+[pkgeval-url]: https://juliaci.github.io/NanosoldierReports/pkgeval_badges/M/MRIPulses.html
+
+[ver-img]: https://juliahub.com/docs/MRIPulses/version.svg
+[ver-url]: https://juliahub.com/ui/Packages/MRIPulses
