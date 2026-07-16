@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Shinnar-Le Roux Pulses · MRIPulses.jl</title><meta name="title" content="Shinnar-Le Roux Pulses · MRIPulses.jl"/><meta property="og:title" content="Shinnar-Le Roux Pulses · MRIPulses.jl"/><meta property="twitter:title" content="Shinnar-Le Roux Pulses · MRIPulses.jl"/><meta name="description" content="Documentation for MRIPulses.jl."/><meta property="og:description" content="Documentation for MRIPulses.jl."/><meta property="twitter:description" content="Documentation for MRIPulses.jl."/><meta property="og:url" content="https://MagneticResonanceImaging.github.io/MRIPulses.jl/stable/generated/examples/slr/"/><meta property="twitter:url" content="https://MagneticResonanceImaging.github.io/MRIPulses.jl/stable/generated/examples/slr/"/><link rel="canonical" href="https://MagneticResonanceImaging.github.io/MRIPulses.jl/stable/generated/examples/slr/"/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="MRIPulses.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">MRIPulses.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../../methods/">Methods</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../01-overview/">MRIPulses overview</a></li><li class="is-active"><a class="tocitem" href>Shinnar-Le Roux Pulses</a><ul class="internal"><li><a class="tocitem" href="#Setup"><span>Setup</span></a></li><li><a class="tocitem" href="#Baseline-sinc-pulse"><span>Baseline sinc pulse</span></a></li><li><a class="tocitem" href="#SLR-pulse(s)"><span>SLR pulse(s)</span></a></li><li><a class="tocitem" href="#Plot-pulses"><span>Plot pulses</span></a></li><li><a class="tocitem" href="#RF-waveforms"><span>RF waveforms</span></a></li><li><a class="tocitem" href="#Array-of-spins"><span>Array of spins</span></a></li><li><a class="tocitem" href="#Excite-and-rephase-the-spins."><span>Excite and rephase the spins.</span></a></li><li><a class="tocitem" href="#Plot-slice-profiles"><span>Plot slice profiles</span></a></li><li><a class="tocitem" href="#Compare-slice-profiles"><span>Compare slice profiles</span></a></li><li><a class="tocitem" href="#Short-T2-case"><span>Short T2 case</span></a></li></ul></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Shinnar-Le Roux Pulses</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Shinnar-Le Roux Pulses</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MagneticResonanceImaging/MRIPulses.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/MagneticResonanceImaging/MRIPulses.jl/blob/main/docs/lit/examples/slr.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="slr"><a class="docs-heading-anchor" href="#slr">Shinnar-Le Roux Pulses</a><a id="slr-1"></a><a class="docs-heading-anchor-permalink" href="#slr" title="Permalink"></a></h1><p>This page illustrates Shinnar-Le Roux (SLR) pulse design for MRI using the Julia package <a href="https://github.com/MagneticResonanceImaging/MRIPulses.jl"><code>MRIPulses</code></a>.</p><p>The <a href="https://sigpy.readthedocs.io/en/latest/mri_rf.html">SigPy documentation</a> may be helpful.</p><p>This page comes from a single Julia file: <a href="https://github.com/MagneticResonanceImaging/MRIPulses.jl/blob/main/docs/lit/examples/slr.jl"><code>slr.jl</code></a>.</p><p>You can access the source code for such Julia documentation using the &#39;Edit on GitHub&#39; link in the top right. You can view the corresponding notebook in <a href="https://nbviewer.org/">nbviewer</a> here: <a href="https://nbviewer.org/github/MagneticResonanceImaging/MRIPulses.jl/tree/gh-pages/dev/generated/examples/slr.ipynb"><code>slr.ipynb</code></a>, or open it in <a href="https://mybinder.org/">binder</a> here: <a href="https://mybinder.org/v2/gh/MagneticResonanceImaging/MRIPulses.jl/gh-pages?filepath=dev/generated/examples/slr.ipynb"><code>slr.ipynb</code></a>.</p><h2 id="Setup"><a class="docs-heading-anchor" href="#Setup">Setup</a><a id="Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Setup" title="Permalink"></a></h2><p>First we add the Julia packages that are need for this demo. Change <code>false</code> to <code>true</code> in the following code block if you are using any of the following packages for the first time.</p><pre><code class="language-julia hljs">if false
+    import Pkg
+    Pkg.add([
+        &quot;BlochSim&quot;
+        &quot;InteractiveUtils&quot;
+        &quot;LaTeXStrings&quot;
+        &quot;LinearAlgebra&quot;
+        &quot;MIRTjim&quot;
+        &quot;MRIPulses&quot;
+        &quot;Plots&quot;
+    ])
+end</code></pre><p>Tell this Julia session to use the following packages for this example. Run <code>Pkg.add()</code> in the preceding code block first, if needed.</p><pre><code class="language-julia hljs">using BlochSim: rf_slice, Spin, Position, signal, RF, b1_gauss, rf_slice
+using BlochSim: excite!, spoil!
+using LaTeXStrings
+using MRIPulses: dzrf
+using MIRTjim: jim, prompt
+using Plots: default, plot, plot!
+
+default(titlefontsize = 10, markerstrokecolor = :auto, label=&quot;&quot;, width = 1.5)</code></pre><p>The following line is helpful when running this file as a script; this way it will prompt user to hit a key after each figure is displayed.</p><pre><code class="language-julia hljs">isinteractive() ? jim(:prompt, true) : prompt(:draw);</code></pre><h2 id="Baseline-sinc-pulse"><a class="docs-heading-anchor" href="#Baseline-sinc-pulse">Baseline sinc pulse</a><a id="Baseline-sinc-pulse-1"></a><a class="docs-heading-anchor-permalink" href="#Baseline-sinc-pulse" title="Permalink"></a></h2><pre><code class="language-julia hljs">tRF_ms = 0.5
+n = 2^8 # how many samples
+Δt_ms = tRF_ms / n # 3.90625 μs
+nlobe = 3
+α_deg = 60 # flip angle ° (somewhat large for testing)
+α_rad = deg2rad(α_deg)
+slice_width = 0.5 # cm
+rf0, rephasing0 = rf_slice(tRF_ms ; nlobe, α_rad, Δt_ms, slice_width)
+pulse0 = real(@. rf0.α * cis(rf0.θ)) # / b1_gauss(1, rf0.Δt)
+label0 = &quot;Sinc nlobe=$nlobe&quot;;</code></pre><h2 id="SLR-pulse(s)"><a class="docs-heading-anchor" href="#SLR-pulse(s)">SLR pulse(s)</a><a id="SLR-pulse(s)-1"></a><a class="docs-heading-anchor-permalink" href="#SLR-pulse(s)" title="Permalink"></a></h2><pre><code class="language-julia hljs">tb = 2nlobe # time-bandwidth
+d1, d2 = 0.01, 0.01 # δ₁, δ₂ ripple design parameters
+ptype = :st; factor = 2sin(α_rad/2) # todo empirical factor for :st case
+ftype1 = :pm
+ftype2 = :ls
+cancel_alpha_phs = false
+
+pulse1 = dzrf(; n, tb, ptype, ftype=ftype1, d1, d2, cancel_alpha_phs)
+@assert pulse1 ≈ real(pulse1)
+pulse1 = factor * real(pulse1)
+label1 = &quot;SLR $ptype $ftype1&quot;
+
+pulse2 = dzrf(; n, tb, ptype, ftype=ftype2, d1, d2, cancel_alpha_phs)
+@assert pulse2 ≈ real(pulse2)
+pulse2 = factor * real(pulse2)
+label2 = &quot;SLR $ptype $ftype2&quot; ;</code></pre><h2 id="Plot-pulses"><a class="docs-heading-anchor" href="#Plot-pulses">Plot pulses</a><a id="Plot-pulses-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-pulses" title="Permalink"></a></h2><pre><code class="language-julia hljs">t = ((0:(n-1)) / n .- 0.5) * tRF_ms # [-tRF_ms/2, tRF_ms/2)
+prf = plot(t, [pulse0 pulse1 pulse2],
+  label = [label0 label1 label2],
+  xaxis = (&quot;t [ms]&quot;, (-1,1) .* (tRF_ms/2), ),
+  yaxis = (&quot;RF(t) [rad]&quot;, ),
+  title = &quot;RF pulses: α=$(α_deg)° tRF=$tRF_ms ms width=$slice_width cm&quot;,
+)</code></pre><img src="10db55e7.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()</code></pre><h2 id="RF-waveforms"><a class="docs-heading-anchor" href="#RF-waveforms">RF waveforms</a><a id="RF-waveforms-1"></a><a class="docs-heading-anchor-permalink" href="#RF-waveforms" title="Permalink"></a></h2><p>For now, use the rephasing gradient from <code>rf0</code>. The rephasing gradient amplitude could be adjusted to better flatten the phase.</p><pre><code class="language-julia hljs">wave1 = pulse1 * b1_gauss(1, Δt_ms) # convert to Gauss for RF()
+wave2 = pulse2 * b1_gauss(1, Δt_ms)
+rf1 = RF(wave1, Δt_ms, 0, rf0.grad)
+rf2 = RF(wave2, Δt_ms, 0, rf0.grad);</code></pre><h2 id="Array-of-spins"><a class="docs-heading-anchor" href="#Array-of-spins">Array of spins</a><a id="Array-of-spins-1"></a><a class="docs-heading-anchor-permalink" href="#Array-of-spins" title="Permalink"></a></h2><p>For a range of z-positions to examine slice profile</p><pre><code class="language-julia hljs">Mz0, T1_ms, T2_ms, Δf_Hz = 1, 400, 80, 9 # tissue parameters
+
+zpos = range(-1, 1, 201) # z positions (cm)
+zfov = only(diff([extrema(zpos)...])) # 2 cm
+
+make_spins(Mz0, T1_ms, T2_ms, Δf_Hz) = map(zpos) do z
+    pos = Position(0, 0, z)
+    Spin(Mz0, T1_ms, T2_ms, Δf_Hz, pos)
+end;</code></pre><h2 id="Excite-and-rephase-the-spins."><a class="docs-heading-anchor" href="#Excite-and-rephase-the-spins.">Excite and rephase the spins.</a><a id="Excite-and-rephase-the-spins.-1"></a><a class="docs-heading-anchor-permalink" href="#Excite-and-rephase-the-spins." title="Permalink"></a></h2><pre><code class="language-julia hljs">function exciter(rf;
+    T2_ms::Real = T2_ms,
+    spins = make_spins(Mz0, T1_ms, T2_ms, Δf_Hz),
+    rephasing = rephasing0,
+)
+    map(spins) do spin
+        excite!(spin, rf)
+        spoil!(spin, rephasing)
+    end;
+    signal_out = signal.(spins)
+    return spins, signal_out
+end
+
+spins0, signal0 = exciter(rf0)
+spins1, signal1 = exciter(rf1)
+spins2, signal2 = exciter(rf2);</code></pre><h2 id="Plot-slice-profiles"><a class="docs-heading-anchor" href="#Plot-slice-profiles">Plot slice profiles</a><a id="Plot-slice-profiles-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-slice-profiles" title="Permalink"></a></h2><pre><code class="language-julia hljs">function plot_profile(spins, plabel)
+    mx = map(spin -&gt; spin.M.x, spins)
+    my = map(spin -&gt; spin.M.y, spins)
+    mz = map(spin -&gt; spin.M.z, spins)
+    mmag = @. sqrt(mx^2 + my^2)
+    mpha = @. atan(my, mx)
+
+    xaxis = (&quot;z [cm]&quot;, (-1,1), [-1, -slice_width/2, 0, slice_width/2, 1])
+    ytick = ([0, cos(α_rad), sin(α_rad), 1],
+        [&quot;0&quot;, &quot;cos($(α_deg)°)&quot;, &quot;sin($(α_deg)°)&quot;, 1])
+    pmag = plot(; xaxis, yaxis = (&quot;&quot;, (-0.2,1), ytick), legend = :right)
+    plot!(zpos, mx, label = &quot;Mx&quot;)
+    plot!(zpos, my, label = &quot;My&quot;)
+    plot!(zpos, mz, label = &quot;Mz&quot;)
+    plot!(zpos, mmag, label = &quot;|Mxy|&quot;)
+
+    ppha = plot(; xaxis, legend = :right)
+    plot!(zpos, mpha, label = &quot;∠Mxy&quot;)
+
+    return plot(pmag, ppha; layout = (2,1),
+      plot_title = &quot;Slice profile: $plabel, α=$(α_deg)° T2=$T2_ms ms&quot;,
+    )
+end;
+
+pp0 = plot_profile(spins0, label0)</code></pre><img src="be86dd75.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()
+
+pp1 = plot_profile(spins1, label1)</code></pre><img src="532aa29b.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()
+
+pp2 = plot_profile(spins2, label2)</code></pre><img src="aee04a15.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()</code></pre><h2 id="Compare-slice-profiles"><a class="docs-heading-anchor" href="#Compare-slice-profiles">Compare slice profiles</a><a id="Compare-slice-profiles-1"></a><a class="docs-heading-anchor-permalink" href="#Compare-slice-profiles" title="Permalink"></a></h2><pre><code class="language-julia hljs">function plot_profile2(signals, labels)
+    xaxis = (&quot;z [cm]&quot;, (-1,1), [-1, -slice_width/2, 0, slice_width/2, 1])
+    ytick = ([0, sin(α_rad), 1], [&quot;0&quot;, &quot;sin($(α_deg)°)&quot;, 1])
+    plot(; title =
+        latexstring(&quot;|M_{xy}| \\ \\mathrm{and} \\ M_y \\ \\mathrm{ for } \\ α=$(α_deg)° \\ T_2=$T2_ms \\ \\mathrm{ms}&quot;),
+        xaxis, yaxis = (&quot;&quot;, (-0.2,1), ytick), legend = :right)
+    plot!(zpos, abs.(signals); label=labels)
+    plot!(zpos, imag.(signals); color=(1:3)&#39;)
+end
+
+signals = [signal0 signal1 signal2]
+labels = [label0 label1 label2]
+pmag1 = plot_profile2(signals, labels)</code></pre><img src="81213bae.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()</code></pre><h2 id="Short-T2-case"><a class="docs-heading-anchor" href="#Short-T2-case">Short T2 case</a><a id="Short-T2-case-1"></a><a class="docs-heading-anchor-permalink" href="#Short-T2-case" title="Permalink"></a></h2><p>Here the profile is even farther from the target, even for a 0.5 ms RF pulse.</p><p>Seems like the &quot;apparent&quot; M₀ could be quite different for short T2 and long T2 spins, which could bias <span>$f_{\mathrm{f}}$</span> in some types of scans.</p><pre><code class="language-julia hljs">T2_ms = 10
+spins0, signal0 = exciter(rf0; T2_ms)
+spins1, signal1 = exciter(rf1; T2_ms)
+spins2, signal2 = exciter(rf2; T2_ms)
+pmag2 = plot_profile2([signal0 signal1 signal2], labels)</code></pre><img src="2fb52ebe.svg" alt="Example block output"/><pre><code class="language-julia hljs">prompt()</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../01-overview/">« MRIPulses overview</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 29 May 2026 03:05">Friday 29 May 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
